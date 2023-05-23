@@ -12,6 +12,7 @@ import java.util.List;
 public class PersonaDAO {
     private static final String SQL_SELECT = "select id_persona, nombre, apellido, email, telefono from persona";
     private static final String SQL_INSERT = "insert into persona (nombre, apellido, email, telefono) values (?,?,?,?)";
+    private static final String SQL_DELETE = "delete from persona where id_persona = ?";
 
     public List<Persona> seleccionar() {
         Connection con = null;
@@ -45,6 +46,28 @@ public class PersonaDAO {
             }
         }
         return personas;
+    }
+
+    public int borrar(Persona persona) {
+        int registros = 0;
+        Connection conn = null;
+        PreparedStatement stms = null;
+        try {
+            conn = Conexion.getConnection();
+            stms = conn.prepareStatement(SQL_DELETE);
+            stms.setInt(1, persona.getIdPersona());
+            registros = stms.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(System.out);
+        } finally {
+            try {
+                conn.close();
+                stms.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return registros;
     }
 
     public int insertar(Persona persona) {

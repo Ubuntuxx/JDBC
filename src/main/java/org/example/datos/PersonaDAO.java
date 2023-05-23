@@ -2,10 +2,7 @@ package org.example.datos;
 
 import org.example.domain.Persona;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +10,8 @@ public class PersonaDAO {
     private static final String SQL_SELECT = "select id_persona, nombre, apellido, email, telefono from persona";
     private static final String SQL_INSERT = "insert into persona (nombre, apellido, email, telefono) values (?,?,?,?)";
     private static final String SQL_DELETE = "delete from persona where id_persona = ?";
+    private static final String SQL_UPDATE = "update persona set nombre = ?, apellido = ?, email= ?, telefono = ? where id_persona = ?";
+
 
     public List<Persona> seleccionar() {
         Connection con = null;
@@ -68,6 +67,32 @@ public class PersonaDAO {
             }
         }
         return registros;
+    }
+
+    public int editar(Persona persona) {
+        Connection con = null;
+        PreparedStatement stms = null;
+        int registro = 0;
+        try {
+            con = Conexion.getConnection();
+            stms = con.prepareStatement(SQL_UPDATE);
+            stms.setString(1, persona.getNombre());
+            stms.setString(2, persona.getApellido());
+            stms.setString(3, persona.getEmail());
+            stms.setString(4, persona.getTelefono());
+            stms.setInt(5, persona.getIdPersona());
+            registro = stms.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                Conexion.close(stms);
+                Conexion.close(con);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return registro;
     }
 
     public int insertar(Persona persona) {

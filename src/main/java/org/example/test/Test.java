@@ -15,12 +15,16 @@ public class Test {
 //        personaDAO.insertar(persona);
 
         //borrando registro
-//        Persona personadelete = new Persona(1201);
+//        Persona personadelete = new Persona(1198);
 //        personaDAO.borrar(personadelete);
 
-        for (Persona persona1 : personas) {
-            System.out.println(persona1);
-        }
+        //editar
+        Persona personEdit = new Persona(7, "Claudio", "X Gonzalez", "caludio@correo.com", "555-654-9878");
+        personaDAO.editar(personEdit);
+
+//        for (Persona persona : personas) {
+//            System.out.println(persona);
+//        }
 
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class PersonaDAO {
     private static final String SQL_SELECT = "select id_persona, nombre, apellido, email, telefono from persona";
+    private static final String SQL_INSERT = "insert into persona (nombre, apellido, email, telefono) values (?,?,?,?)";
 
     public List<Persona> seleccionar() {
         Connection con = null;
@@ -44,5 +45,31 @@ public class PersonaDAO {
             }
         }
         return personas;
+    }
+
+    public int insertar(Persona persona) {
+        Connection conn = null;
+        PreparedStatement stms = null;
+        int registros = 0;
+        try {
+            conn = Conexion.getConnection();
+            stms = conn.prepareStatement(SQL_INSERT);
+            stms.setString(1, persona.getNombre());
+            stms.setString(2, persona.getApellido());
+            stms.setString(3, persona.getEmail());
+            stms.setString(4, persona.getTelefono());
+            registros = stms.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                Conexion.close(stms);
+                Conexion.close(conn);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return registros;
+
     }
 }
